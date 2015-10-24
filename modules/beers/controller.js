@@ -4,13 +4,7 @@ var fs = require('fs');
 
 var Controller = {
 	create: function(req, res){
-		var dados = {
-			name: 'Skol',
-			description: 'mijo de rato',
-			alcohol: 4.5,
-			price: 3.0,
-			category: 'pilse'
-		};
+		var dados = req.boby;
 		
 		var model = new Model(dados);
 
@@ -43,8 +37,27 @@ var Controller = {
 	
 	},
 	
+	get: function(req, res){
+		var query = {_id: req.params.id };
+
+		Model.findOne(query, function (err, data){
+			if (err){
+				console.log('erro', err);
+				msg =  err;
+			} else {
+				console.log('Listagem', data);
+				msg = data;
+			}
+			res.json(msg);
+		});
+	
+	},
+	
+	
 	update: function(req, res){
-		var query = {name: /skol/i };
+		var query = {_id: req.params.id };
+		
+		var mod = req.boby;
 
 		var mod = {
 			name: 'Brahma',
@@ -70,8 +83,9 @@ var Controller = {
 		});
 			
 	},
+	
 	delete: function(req, res){
-		var query = {name: /Skol/i };
+		var query = {_id: req.params.id };
 
 		Model.remove(query, function (err, data){
 			if (err){
@@ -84,7 +98,40 @@ var Controller = {
 			res.json(msg);
 
 		});
-	}
+	},
+	
+	list: function(req, res){
+		var query ={};
+
+		Model.find(query, function (err, data){
+			if (err){
+				console.log('erro', err);
+				msg =  err;
+			} else {
+				console.log('Listagem', data);
+				msg = data;
+			}
+			res.render('list', { title: 'Listagem de Cervejas', beers: data });
+		});
+	
+	},
+ 
+ getid: function(req, res){
+		var query = {_id: req.params.id };
+
+		Model.findOne(query, function (err, data){
+			if (err){
+				console.log('erro', err);
+				msg =  err;
+			} else {
+				console.log('Listagem', data);
+				msg = data;
+			}
+			res.render('beer', { title: 'Listagem de Cervejas', beer: data });
+		});
+	
+	},
+	
 
 }
 	
